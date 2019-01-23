@@ -1,0 +1,6 @@
+{
+    "name" : "This is the name in production",
+    "mail" : {
+      "host" : "prod-mail-server"
+    }
+}
