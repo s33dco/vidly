@@ -1,3 +1,4 @@
+const mongoose        = require('mongoose');
 const appDebug        = require('debug')('app:startup');
 const dbDebug         = require('debug')('app:db');
 const config          = require('config');
@@ -9,6 +10,13 @@ const express         = require('express');
 const port            = process.env.PORT || 3000;
 const app             = express();
 const genres         = require('./routes/genres');
+
+mongoose.set('debug', true);
+
+mongoose.connect('mongodb://localhost/vidly', { useNewUrlParser: true })
+  .then(() => dbDebug('Connected to MongoDB >;-)'))
+  .catch((e) => dbDebug('oh noes could not connect', e.message));
+
 app.set('view engine', 'pug');
 app.set('views','./views');
 
@@ -26,11 +34,9 @@ app.use('/api/genres', genres);
 console.log(`app name : ${config.get('name')}`)
 console.log(`app name : ${config.get('mail.host')}`)
 appDebug('morgan enabled');
-dbDebug('morgan enabled');
 
 if (app.get('env') === 'development'){
   app.use(morgan('tiny'));
-
 }
 
 app.use(logger);
@@ -50,5 +56,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`listening on port ${port}`);
+  appDebug(`listening on port ${port}`);
 });
