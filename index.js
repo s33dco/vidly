@@ -9,7 +9,8 @@ const {logger, auth}  = require('./middleware');
 const express         = require('express');
 const port            = process.env.PORT || 3000;
 const app             = express();
-const genres         = require('./routes/genres');
+const genres          = require('./routes/genres');
+const customers       = require('./routes/customers');
 
 mongoose.set('debug', true);
 
@@ -28,7 +29,7 @@ app.use(express.urlencoded({extended : true}));
 app.use(express.static('public'));
 app.use(helmet());
 app.use('/api/genres', genres);
-
+app.use('/api/customers', customers);
 //  configuration
 
 console.log(`app name : ${config.get('name')}`)
