@@ -1,11 +1,11 @@
-const logger = (req, res, next) => {
+const loggerMessage = (req, res, next) => {
   console.log('logging...');
   next();
 };
 
-const auth = (req, res, next) => {
+const authMessage = (req, res, next) => {
   console.log('authenticating...');
   next();
 }
 
-module.exports = { logger, auth };
+module.exports = { loggerMessage, authMessage };
