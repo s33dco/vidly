@@ -35,7 +35,7 @@ function validate(movie) {
     title: Joi.string().min(5).max(50).required(),
     numberInStock: Joi.number().integer().min(0).max(255),
     dailyRentalRate: Joi.number().precision(2).min(0).max(255),
-    genreId: Joi.string().required()
+    genreId: Joi.objectId().required()
     // what about genre..
   };
 
