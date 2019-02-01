@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
-const dbDebug         = require('debug')('app:db');
+const Fawn = require('fawn');
+const dbDebug   = require('debug')('app:db');
 const { Movie } = require('../models/movies');
 const { Customer }  = require('../models/customers');
 const { Rental, validate }  = require('../models/rentals');
+
+Fawn.init(mongoose);
 
 router.get('/', async (req, res) => {
   const rentals = await Rental.find().sort('-dateOut');
@@ -28,22 +31,38 @@ router.post('/', async (req, res) => {
   let rental = new Rental({
       movie : {
         _id: movie._id,                         //id passed from original movieSchema into custom schema
-        title: movie.title,
+        title: movie.title,                     // light version of full movie schema
         dailyRentalRate: movie.dailyRentalRate
       },
       customer : {
         _id: customer._id,
         name: customer.name,
-        phone: customer.phone
+        phone: customer.phone,
+        isGold: customer.isGold
       }
     });
 
-  rental = await rental.save();
+  // rental = await rental.save(); // rental save
+  //
+  // movie.numberInStock--;        // amend stock level
+  // movie.save();                 // needs to be in a transaction/atomic
 
-  movie.numberInStock--;
-  movie.save();
+  try {                                       // task in try block...
+    new Fawn.Task()                           // set up atomic task
+      .save('rentals', rental)                // collection name, obj
+      .update('movies', {_id: movie._id}, {   // collection, {obj}, {udpate doc}
+          $inc :{ numberInStock: -1 }
+      })
+      .run();
 
-  res.send(rental);
+    res.send(rental);
+  }
+  catch(e) {
+    res.status(500).send('Something went wrong');
+  }
+
+
+
 });
 
 router.delete('/:id', async (req, res) => {
