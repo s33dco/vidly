@@ -17,6 +17,10 @@ const rentals         = require('./routes/rentals');
 const users           = require('./routes/users');
 const auth            = require('./routes/auth');
 
+if (!config.get('jwtPrivateKey')){
+  console.error("FATAL ERROR: jwtPrivateKey not defined.");
+  process.exit(1);
+}
 
 mongoose.set('debug', true);
 

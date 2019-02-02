@@ -1,6 +1,6 @@
 const bcrypt      = require('bcrypt');
 const Joi         = require('joi');
-const _           = require('lodash');
+const _           = require('lodash');    // or use destructuring instead of .pick
 const mongoose    = require('mongoose');
 const express     = require('express');
 const router      = express.Router();
@@ -20,7 +20,15 @@ router.post('/', async (req, res) => {
 
   if (!validPassword) return res.status(400).send('Invalid email or password.');
 
-  res.send(true);
+  // send back a JWT
+  // put in localstorage
+  // jwt.io
+
+  const token = user.generateAuthToken();
+
+  // decode token give _id and iat (timestamp)
+
+  res.send(token);
 
 });
 

@@ -1,5 +1,5 @@
 {
-    "mail" : {
-      "password" : "app_password"
-    }
+  "name" : "This is the name",
+  "jwtPrivateKey" : "vidly_jwtPrivateKey"
+
 }
