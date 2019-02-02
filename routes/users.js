@@ -13,7 +13,7 @@ router.get('/me', auth, async (req, res) => {
 });
 
 
-router.post('/', auth, async (req, res) => {
+router.post('/', async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -32,13 +32,13 @@ router.post('/', auth, async (req, res) => {
 
 });
 
+// log out remove token from client - no tokens stored in db.
 
 
-
-// router.get('/', async (req, res) => {
-//   const users = await User.find().sort('name');
-//   res.send(users);
-// });
+router.get('/', async (req, res) => {
+  const users = await User.find().sort('name');
+  res.send(users);
+});
 
 
 

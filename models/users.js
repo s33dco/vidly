@@ -23,25 +23,16 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 10,
     maxlength: 1024,
-  }
+  },
+  isAdmin: Boolean
 });
 
 userSchema.methods.generateAuthToken = function (){
-  const token = jwt.sign({_id: this._id}, config.get('jwtPrivateKey'));
+  const token = jwt.sign({_id: this._id, isAdmin: this.isAdmin, name: this.name}, config.get('jwtPrivateKey'), { expiresIn: '1h' });
   return token;
 };
 
 const User = mongoose.model('User', userSchema);
-
-// const complexityOptions = {
-//   min: 10,
-//   max: 1024,
-//   lowerCase: 1,
-//   upperCase: 1,
-//   numeric: 1,
-//   symbol: 1,
-//   requirementCount: 4,
-// }
 
 function validate(user) {
   const schema = {

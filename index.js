@@ -6,7 +6,6 @@ const helmet          = require('helmet');
 const morgan          = require('morgan');
 const Joi             = require('joi');
 Joi.objectId          = require('joi-objectId')(Joi);
-const {loggerMessage, authMessage}  = require('./middleware');
 const express         = require('express');
 const port            = process.env.PORT || 3000;
 const app             = express();
@@ -54,15 +53,11 @@ if (app.get('env') === 'development'){
   app.use(morgan('tiny'));
 }
 
-app.use(loggerMessage);
-
-app.use(authMessage);
 
 function validateGenre(genre) {
   const schema = {
     name: Joi.string().min(3).required()
   };
-
   return Joi.validate(genre, schema);
 }
 
