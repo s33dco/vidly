@@ -1,3 +1,4 @@
+require('express-async-errors');
 const error           = require('./middleware/error');
 const mongoose        = require('mongoose');
 const appDebug        = require('debug')('app:startup');
@@ -33,7 +34,6 @@ app.set('views','./views');
 
 
 console.log(`app: ${app.get('env')}`);
-
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(express.static('public'));

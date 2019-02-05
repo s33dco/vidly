@@ -1,4 +1,3 @@
-const asyncMiddleware = require('../middleware/async');
 const auth              = require('../middleware/auth');
 const bcrypt            = require('bcrypt');
 const _                 = require('lodash');
@@ -8,13 +7,13 @@ const router            = express.Router();
 const {User, validate } = require('../models/users');
 
 
-router.get('/me', auth, asyncMiddleware(async (req, res) => {
+router.get('/me', auth, async (req, res) => {
   const user = await User.findById(req.user._id, {password:0, __v:0}); //.select('-password')
   res.send(user);
-}));
+});
 
 
-router.post('/', asyncMiddleware(async (req, res) => {
+router.post('/', async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -31,16 +30,13 @@ router.post('/', asyncMiddleware(async (req, res) => {
 
   res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']))
 
-}));
+});
 
 // log out remove token from client - no tokens stored in db.
 
-
-router.get('/', asyncMiddleware(async (req, res) => {
+router.get('/', async (req, res) => {
   const users = await User.find().sort('name');
   res.send(users);
-}));
-
-
+});
 
 module.exports = router;
