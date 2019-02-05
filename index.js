@@ -1,3 +1,4 @@
+const error           = require('./middleware/error');
 const mongoose        = require('mongoose');
 const appDebug        = require('debug')('app:startup');
 const dbDebug         = require('debug')('app:db');
@@ -30,7 +31,7 @@ mongoose.connect('mongodb://localhost/vidly', { useNewUrlParser: true })
 app.set('view engine', 'pug');
 app.set('views','./views');
 
-console.log(`NODE_ENV = ${process.env.NODE_ENV}`);
+
 console.log(`app: ${app.get('env')}`);
 
 app.use(express.json());
@@ -43,27 +44,19 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
-//  configuration
-
-console.log(`app name : ${config.get('name')}`)
-console.log(`app name : ${config.get('mail.host')}`)
-appDebug('morgan enabled');
 
 if (app.get('env') === 'development'){
+  console.log(`strating in development....`);
   app.use(morgan('tiny'));
+  appDebug('morgan enabled');
 }
 
-
-function validateGenre(genre) {
-  const schema = {
-    name: Joi.string().min(3).required()
-  };
-  return Joi.validate(genre, schema);
-}
 
 app.get('/', (req, res) => {
   res.render('index', {title: "My app", message: 'hi there!'})
 })
+
+app.use(error);
 
 app.listen(port, () => {
   appDebug(`listening on port ${port}`);
