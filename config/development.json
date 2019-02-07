@@ -1,6 +1,0 @@
-{
-    "name" : "This is the name in development",
-    "mail" : {
-      "host" : "dev-mail-server"
-    }
-}
